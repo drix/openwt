@@ -1,8 +1,7 @@
 package club.iotech.openwt.boat;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,22 +10,19 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name="TBL_BOAT")
 public class BoatEntity {
 
     @Id
-    @Getter
-    @Setter
     @GeneratedValue
     private Long id;
 
-    @Getter
-    @Setter
+    @NonNull
     @Column(name="name", nullable=false, length=200)
     private String name;
 
-    @Getter
-    @Setter
     @Column(name="description")
     private String description;
 
