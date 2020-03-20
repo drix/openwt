@@ -1,6 +1,5 @@
 package club.iotech.openwt.boat;
 
-
 import lombok.*;
 
 import javax.persistence.Column;

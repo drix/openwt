@@ -7,8 +7,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import club.iotech.openwt.exception.RecordNotFoundException;
-
 @Service
 public class BoatService {
 
@@ -26,23 +24,16 @@ public class BoatService {
         }
     }
 
-    public BoatEntity getById(Long id) throws RecordNotFoundException
+    public Optional<BoatEntity> getById(Long id)
     {
-        Optional<BoatEntity> boat = repository.findById(id);
-
-        if(boat.isPresent()) {
-            return boat.get();
-        } else {
-            throw new RecordNotFoundException("No boat record exist for given id");
-        }
+        return repository.findById(id);
     }
 
-    public BoatEntity createOrUpdate(BoatEntity entity) throws RecordNotFoundException
+    public BoatEntity createOrUpdate(BoatEntity entity)
     {
         Optional<BoatEntity> boat = repository.findById(entity.getId());
 
-        if(boat.isPresent())
-        {
+        if(boat.isPresent()) {
             BoatEntity newEntity = boat.get();
             newEntity.setName(entity.getName());
             newEntity.setDescription(entity.getDescription());
@@ -57,15 +48,14 @@ public class BoatService {
         }
     }
 
-    public void deleteById(Long id) throws RecordNotFoundException
+    public boolean deleteById(Long id)
     {
         Optional<BoatEntity> boat = repository.findById(id);
 
-        if(boat.isPresent())
-        {
+        if(boat.isPresent()) {
             repository.deleteById(id);
-        } else {
-            throw new RecordNotFoundException("No boat record exist for given id");
+            return true;
         }
+        return false;
     }
 }

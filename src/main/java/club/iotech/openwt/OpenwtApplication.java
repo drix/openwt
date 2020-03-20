@@ -2,17 +2,10 @@ package club.iotech.openwt;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.Ordered;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Collections;
-
-@EnableResourceServer
 @SpringBootApplication
 public class OpenwtApplication {
 
@@ -20,19 +13,18 @@ public class OpenwtApplication {
 		SpringApplication.run(OpenwtApplication.class, args);
 	}
 
-	// Fix the CORS errors
 	@Bean
-	public FilterRegistrationBean corsFilter() {
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowCredentials(true);
-		// *** URL below needs to match the Vue client URL and port ***
-		config.setAllowedOrigins(Collections.singletonList("http://localhost:8080"));
-		config.setAllowedMethods(Collections.singletonList("*"));
-		config.setAllowedHeaders(Collections.singletonList("*"));
-		source.registerCorsConfiguration("/**", config);
-		FilterRegistrationBean bean = new FilterRegistrationBean<>(new CorsFilter(source));
-		bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-		return bean;
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry
+					.addMapping("/boat")
+					.allowedOrigins(
+							"http://iotech.club:8090",	// PROD
+							"http://localhost:8080"		// DEV
+					);
+			}
+		};
 	}
 }

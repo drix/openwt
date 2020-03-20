@@ -1,8 +1,8 @@
 package club.iotech.openwt.boat;
 
 import java.util.List;
+import java.util.Optional;
 
-import club.iotech.openwt.exception.RecordNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/boat")
 public class BoatController
 {
+    @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "boat not found")
+    public class BoatNotFoundException extends RuntimeException { }
+
     @Autowired
     BoatService service;
 
@@ -27,22 +29,25 @@ public class BoatController
 
     @GetMapping("/{id}")
     public ResponseEntity<BoatEntity> getById(@PathVariable("id") Long id)
-            throws RecordNotFoundException {
-        BoatEntity entity = service.getById(id);
-
-        return new ResponseEntity<BoatEntity>(entity, new HttpHeaders(), HttpStatus.OK);
+            throws BoatNotFoundException {
+        Optional<BoatEntity> entity = service.getById(id);
+        if (entity.isPresent()) {
+            return new ResponseEntity<BoatEntity>(entity.get(), new HttpHeaders(), HttpStatus.OK);
+        } else {
+            throw new BoatNotFoundException();
+        }
     }
 
     @PostMapping
     public ResponseEntity<BoatEntity> createOrUpdate(BoatEntity boat)
-            throws RecordNotFoundException {
+            throws BoatNotFoundException {
         BoatEntity updated = service.createOrUpdate(boat);
         return new ResponseEntity<BoatEntity>(updated, new HttpHeaders(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public HttpStatus deleteById(@PathVariable("id") Long id)
-            throws RecordNotFoundException {
+            throws BoatNotFoundException {
         service.deleteById(id);
         return HttpStatus.FORBIDDEN;
     }
