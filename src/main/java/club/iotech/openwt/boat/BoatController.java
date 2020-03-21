@@ -1,6 +1,7 @@
 package club.iotech.openwt.boat;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +16,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoatController
 {
     @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "boat not found")
-    public class BoatNotFoundException extends RuntimeException { }
+    final public class BoatNotFoundException extends RuntimeException { }
 
     @Autowired
     BoatService service;
 
     @GetMapping
-    public ResponseEntity<List<BoatEntity>> getAll() {
+    final public ResponseEntity<List<BoatEntity>> getAll() {
         List<BoatEntity> list = service.getAll();
 
         return new ResponseEntity<List<BoatEntity>>(list, new HttpHeaders(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BoatEntity> getById(@PathVariable("id") Long id)
+    final public ResponseEntity<BoatEntity> getById(@PathVariable("id") Long id)
             throws BoatNotFoundException {
         Optional<BoatEntity> entity = service.getById(id);
         if (entity.isPresent()) {
@@ -39,17 +40,32 @@ public class BoatController
     }
 
     @PostMapping
-    public ResponseEntity<BoatEntity> createOrUpdate(BoatEntity boat)
+    final public ResponseEntity<BoatEntity> create(BoatEntity boat)
             throws BoatNotFoundException {
         BoatEntity updated = service.createOrUpdate(boat);
         return new ResponseEntity<BoatEntity>(updated, new HttpHeaders(), HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    final public ResponseEntity<BoatEntity> update(
+            @RequestBody Map<String, String> body,
+            @PathVariable("id") Long id)
+            throws BoatNotFoundException {
+
+        BoatEntity boat = BoatEntity.fromMap(body);
+        boat.setId(id);
+
+        if(!boat.validate()) {
+            return new ResponseEntity<BoatEntity>(boat, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
+        BoatEntity updated = service.createOrUpdate(boat);
+        return new ResponseEntity<BoatEntity>(updated, new HttpHeaders(), HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
-    public HttpStatus deleteById(@PathVariable("id") Long id)
+    final public HttpStatus deleteById(@PathVariable("id") Long id)
             throws BoatNotFoundException {
         service.deleteById(id);
         return HttpStatus.FORBIDDEN;
     }
-
 }
