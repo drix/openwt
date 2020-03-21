@@ -21,7 +21,7 @@ public class OpenwtApplication {
 				registry
 					.addMapping("/boat")
 					.allowedOrigins(
-							"http://iotech.club:8090",	// PROD
+							"http://iotech.club",	// PROD
 							"http://localhost:8080"		// DEV
 					);
 			}
