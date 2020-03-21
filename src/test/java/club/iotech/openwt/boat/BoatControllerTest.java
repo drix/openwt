@@ -78,8 +78,14 @@ class BoatControllerTest {
     }
 
     @Test
-    void createOrUpdate() {
-        final ResponseEntity<BoatEntity> response = boatController.createOrUpdate(any());
+    void create() {
+        final ResponseEntity<BoatEntity> response = boatController.create(any());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void update() {
+        final ResponseEntity<BoatEntity> response = boatController.update(any(), 1L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 

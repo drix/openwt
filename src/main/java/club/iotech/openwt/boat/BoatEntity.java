@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Map;
 
 @Entity
 @Data
@@ -26,8 +27,23 @@ public class BoatEntity {
     private String description;
 
     @Override
-    public String toString() {
+    final public String toString() {
         return "BoatEntity [id=" + id + ", name=" + name +
                 ", description=" + description  + "]";
+    }
+
+    static final public BoatEntity fromMap(Map<String, String> body){
+        final BoatEntity boat = new BoatEntity();
+        boat.setName(body.get("name"));
+        boat.setDescription(body.get("description"));
+        return boat;
+    }
+
+    final public boolean validate(){
+        try {
+            return this.getName().length() > 0;
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 }
