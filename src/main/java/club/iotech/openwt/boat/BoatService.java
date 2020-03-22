@@ -13,7 +13,7 @@ public class BoatService {
     @Autowired
     BoatRepository repository;
 
-    public List<BoatEntity> getAll()
+    final public List<BoatEntity> getAll()
     {
         List<BoatEntity> boatList = repository.findAll();
 
@@ -24,31 +24,39 @@ public class BoatService {
         }
     }
 
-    public Optional<BoatEntity> getById(Long id)
+    final public Optional<BoatEntity> getById(Long id)
     {
         return repository.findById(id);
     }
 
-    public BoatEntity createOrUpdate(BoatEntity entity)
+    final public BoatEntity update(BoatEntity entity)
+            throws IllegalArgumentException
     {
         Optional<BoatEntity> boat = repository.findById(entity.getId());
-
-        if(boat.isPresent()) {
-            BoatEntity newEntity = boat.get();
-            newEntity.setName(entity.getName());
-            newEntity.setDescription(entity.getDescription());
-
-            newEntity = repository.save(newEntity);
-
-            return newEntity;
-        } else {
-            entity = repository.save(entity);
-
-            return entity;
+        if(!boat.isPresent()) {
+            throw new IllegalArgumentException();
         }
+
+        BoatEntity newEntity = boat.get();
+        newEntity.setName(entity.getName());
+        newEntity.setDescription(entity.getDescription());
+
+        newEntity = repository.save(newEntity);
+
+        return newEntity;
     }
 
-    public boolean deleteById(Long id)
+    final public BoatEntity create(BoatEntity entity)
+            throws IllegalArgumentException
+    {
+        BoatEntity newEntity = new BoatEntity();
+        newEntity.setName(entity.getName());
+        newEntity.setDescription(entity.getDescription());
+
+        return repository.save(newEntity);
+    }
+
+    final public boolean deleteById(Long id)
     {
         Optional<BoatEntity> boat = repository.findById(id);
 

@@ -68,30 +68,30 @@ class BoatServiceTest {
                 .isEqualTo(myBoat);
     }
 
-    @Test
-    void createOrUpdate() {
-        final String myBoat = "myBoat";
-        final BoatEntity boat = new BoatEntity();
-        boat.setId(1L);
-        boat.setName(myBoat);
-
-        when(repository.save(boat))
-                .thenReturn(boat);
-        // create
-        BoatEntity
-        response = boatService.createOrUpdate(boat);
-
-        assertThat(response.getName())
-                .isEqualTo(myBoat);
-        // update
-        boat.setName("random");
-        when(repository.findById(boat.getId()))
-                .thenReturn(Optional.of(boat));
-        response = boatService.createOrUpdate(boat);
-
-        assertThat(response.getName())
-                .isNotEqualTo(myBoat);
-    }
+//    @Test
+//    void createOrUpdate() {
+//        final String myBoat = "myBoat";
+//        final BoatEntity boat = new BoatEntity();
+//        boat.setId(1L);
+//        boat.setName(myBoat);
+//
+//        when(repository.save(boat))
+//                .thenReturn(boat);
+//        // create
+//        BoatEntity
+//        response = boatService.createOrUpdate(boat);
+//
+//        assertThat(response.getName())
+//                .isEqualTo(myBoat);
+//        // update
+//        boat.setName("random");
+//        when(repository.findById(boat.getId()))
+//                .thenReturn(Optional.of(boat));
+//        response = boatService.createOrUpdate(boat);
+//
+//        assertThat(response.getName())
+//                .isNotEqualTo(myBoat);
+//    }
 
     @Test
     void deleteByIdOK() {
