@@ -13,7 +13,7 @@ public class BoatService {
     @Autowired
     BoatRepository repository;
 
-    final public List<BoatEntity> getAll()
+    public List<BoatEntity> getAll()
     {
         List<BoatEntity> boatList = repository.findAll();
 
@@ -24,12 +24,12 @@ public class BoatService {
         }
     }
 
-    final public Optional<BoatEntity> getById(Long id)
+    public Optional<BoatEntity> getById(Long id)
     {
         return repository.findById(id);
     }
 
-    final public BoatEntity update(BoatEntity entity)
+    public BoatEntity update(BoatEntity entity)
             throws IllegalArgumentException
     {
         Optional<BoatEntity> boat = repository.findById(entity.getId());
@@ -46,7 +46,7 @@ public class BoatService {
         return newEntity;
     }
 
-    final public BoatEntity create(BoatEntity entity)
+    public BoatEntity create(BoatEntity entity)
             throws IllegalArgumentException
     {
         BoatEntity newEntity = new BoatEntity();
@@ -56,7 +56,7 @@ public class BoatService {
         return repository.save(newEntity);
     }
 
-    final public boolean deleteById(Long id)
+    public boolean deleteById(Long id)
     {
         Optional<BoatEntity> boat = repository.findById(id);
 
