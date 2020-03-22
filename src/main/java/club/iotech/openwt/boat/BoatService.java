@@ -29,23 +29,31 @@ public class BoatService {
         return repository.findById(id);
     }
 
-    public BoatEntity createOrUpdate(BoatEntity entity)
+    public BoatEntity update(BoatEntity entity)
+            throws IllegalArgumentException
     {
         Optional<BoatEntity> boat = repository.findById(entity.getId());
-
-        if(boat.isPresent()) {
-            BoatEntity newEntity = boat.get();
-            newEntity.setName(entity.getName());
-            newEntity.setDescription(entity.getDescription());
-
-            newEntity = repository.save(newEntity);
-
-            return newEntity;
-        } else {
-            entity = repository.save(entity);
-
-            return entity;
+        if(!boat.isPresent()) {
+            throw new IllegalArgumentException();
         }
+
+        BoatEntity newEntity = boat.get();
+        newEntity.setName(entity.getName());
+        newEntity.setDescription(entity.getDescription());
+
+        newEntity = repository.save(newEntity);
+
+        return newEntity;
+    }
+
+    public BoatEntity create(BoatEntity entity)
+            throws IllegalArgumentException
+    {
+        BoatEntity newEntity = new BoatEntity();
+        newEntity.setName(entity.getName());
+        newEntity.setDescription(entity.getDescription());
+
+        return repository.save(newEntity);
     }
 
     public boolean deleteById(Long id)

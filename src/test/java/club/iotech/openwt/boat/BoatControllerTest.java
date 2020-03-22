@@ -64,7 +64,7 @@ class BoatControllerTest {
         boat.setName(myBoat);
         boat.setDescription(myBoat);
 
-        when(boatService.getById(1L))
+        when(boatService.getById(anyLong()))
                 .thenReturn(Optional.of(boat));
 
         final ResponseEntity<BoatEntity> response = boatController.getById(1L);
@@ -79,13 +79,20 @@ class BoatControllerTest {
 
     @Test
     void create() {
-        final ResponseEntity<BoatEntity> response = boatController.create(any());
+        final ResponseEntity<BoatEntity> response = boatController
+                .create(any(BoatEntity.class));
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     void update() {
-        final ResponseEntity<BoatEntity> response = boatController.update(any(), 1L);
+        final BoatEntity boat = new BoatEntity();
+        boat.setId(1L);
+        boat.setName("test");
+        when(boatService.update(any(BoatEntity.class)))
+                .thenReturn(boat);
+        final ResponseEntity<BoatEntity> response = boatController
+                .update( boat, 1L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
